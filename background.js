@@ -31,4 +31,8 @@ async function triggerRun() {
       body: JSON.stringify({ emailsPerRun: count })
     });
     console.log("[NP] POST", RUN_URL, "->", r.status, r.statusText);
-    if (!r
+    if (!r.ok) console.log("[NP] body:", await r.text());
+  } catch (e) {
+    console.warn("Run trigger failed:", e);
+  }
+}
