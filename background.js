@@ -1,49 +1,7 @@
-const RUN_URL = "https://cpapa.app.n8n.cloud/webhook/80ea3982-204e-4410-88f0-20947f55ae5e";
+console.log("NP worker loaded");
 
-async function setAlarm(minutes) {
-  await chrome.alarms.clear("np-scan");
-  if (minutes && minutes >= 5) {
-    chrome.alarms.create("np-scan", { periodInMinutes: minutes });
-  }
-}
-
-// init alarm on install/update
-chrome.runtime.onInstalled.addListener(async () => {
-  const { interval = 15 } = await chrome.storage.sync.get("interval");
-  setAlarm(interval);
+chrome.runtime.onMessage.addListener(m => {
+  if (m.type === "RUN_NOW") console.log("RUN_NOW received");
 });
 
-// receive messages from popup
-chrome.runtime.onMessage.addListener((msg) => {
-  if (msg.type === "SET_ALARM") {
-    return setAlarm(msg.payload.intervalMinutes);
-  }
-  if (msg.type === "RUN_NOW") {
-    return triggerRun();
-  }
-});
-
-// fire on schedule
-chrome.alarms.onAlarm.addListener((alarm) => {
-  if (alarm.name === "np-scan") triggerRun();
-});
-
-async function triggerRun() {
-  try {
-    const { count = 25 } = await chrome.storage.sync.get("count");
-
-    const r = await fetch(RUN_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ emailsPerRun: count })
-    });
-
-    console.log("[NP] POST", RUN_URL, "->", r.status, r.statusText);
-    if (!r.ok) {
-      const body = await r.text();
-      console.log("[NP] response body:", body);
-    }
-  } catch (e) {
-    console.warn("Run trigger failed:", e);
-  }
-}
+chrome.alarms.onAlarm.addListener(a => console.log("alarm", a.name));
