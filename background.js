@@ -29,7 +29,7 @@ chrome.alarms.onAlarm.addListener((alarm) => {
 async function triggerRun(){
   try {
     const { count = 25 } = await chrome.storage.sync.get("count");
-    await fetch("https://api.neuralpath.io/n8n/run-now", {
+    await fetch("https://cpapa.app.n8n.cloud/webhook/80ea3982-204e-4410-88f0-20947f55ae5e/n8n/run-now", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
