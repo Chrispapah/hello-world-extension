@@ -1,10 +1,9 @@
 {
-  "name": "Hello Extensions",
-  "description": "Base Level Extension",
-  "version": "1.0",
+  "name": "NeuralPath Inbox Summaries",
+  "version": "0.1.0",
   "manifest_version": 3,
-  "action": {
-    "default_popup": "hello.html",
-    "default_icon": "hello_extensions.png"
-  }
+  "action": { "default_popup": "popup.html" },
+  "background": { "service_worker": "background.js" },
+  "permissions": ["storage", "alarms"],
+  "host_permissions": ["https://api.neuralpath.io/*"]   // your backend or n8n webhook
 }
