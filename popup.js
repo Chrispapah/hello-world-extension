@@ -1,4 +1,4 @@
-const $ = id => document.getElementById(id);
+const $ = (id) => document.getElementById(id);
 
 (async function init () {
   const { interval = 15, count = 25 } = await chrome.storage.sync.get(["interval", "count"]);
@@ -9,18 +9,21 @@ const $ = id => document.getElementById(id);
 $("save").onclick = async () => {
   const payload = {
     intervalMinutes: Number($("interval").value),
-    emailsPerRun: Number($("count").value"),
+    emailsPerRun: Number($("count").value),
     action: "save",
     triggeredAt: new Date().toISOString()
   };
 
   // persist locally
-  await chrome.storage.sync.set({ interval: payload.intervalMinutes, count: payload.emailsPerRun });
+  await chrome.storage.sync.set({
+    interval: payload.intervalMinutes,
+    count: payload.emailsPerRun
+  });
 
   // (re)create alarm
   chrome.runtime.sendMessage({ type: "SET_ALARM", payload });
 
-  // send to your webhook (or backend → n8n)
+  // send to your webhook (or backend -> n8n)
   try {
     const r = await fetch(
       "https://cpapa.app.n8n.cloud/webhook/80ea3982-204e-4410-88f0-20947f55ae5e",
