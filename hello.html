@@ -1,6 +1,23 @@
-<html>
-  <body>
-    <h1>Hello Extensions</h1>
-    <script src="popup.js"></script>
-  </body>
-</html>
+<!doctype html><meta charset="utf-8">
+<style>
+  body{font:14px/1.4 system-ui, Arial, sans-serif; min-width:260px; padding:12px}
+  label{display:block; margin:8px 0 4px}
+  input{width:100%; box-sizing:border-box; padding:6px}
+  button{margin-top:10px; padding:6px 10px}
+  small{opacity:.7}
+</style>
+
+<h3>Inbox Summaries</h3>
+
+<label>Every (minutes)</label>
+<input id="interval" type="number" min="5" value="15">
+
+<label>Emails per run</label>
+<input id="count" type="number" min="5" value="25">
+
+<button id="save">Save</button>
+<button id="runNow">Run now</button>
+
+<p><small>Server will run on schedule even if Chrome is closed.</small></p>
+
+<script src="popup.js"></script>
