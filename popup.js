@@ -20,7 +20,7 @@ $("save").onclick = async () => {
 
   // send to your backend (server should forward to n8n Webhook / Data Store)
   // add auth (cookies/jwt) if your site requires it
-  fetch("https://api.neuralpath.io/n8n/onboard", {
+  fetch("https://cpapa.app.n8n.cloud/webhook/80ea3982-204e-4410-88f0-20947f55ae5e/n8n/onboard", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     credentials: "include",
