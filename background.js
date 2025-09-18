@@ -5,7 +5,6 @@ async function setAlarm(minutes) {
   if (minutes && minutes >= 5) chrome.alarms.create("np-scan", { periodInMinutes: minutes });
 }
 
-// init alarm on install/update
 chrome.runtime.onInstalled.addListener(async () => {
   const { interval = 15 } = await chrome.storage.sync.get("interval");
   setAlarm(interval);
@@ -14,22 +13,31 @@ chrome.runtime.onInstalled.addListener(async () => {
 // messages from popup
 chrome.runtime.onMessage.addListener((m) => {
   if (m.type === "SET_ALARM") return setAlarm(m.payload.intervalMinutes);
-  if (m.type === "RUN_NOW")   return triggerRun();
+  if (m.type === "RUN_NOW")   return triggerRun("runNow");
 });
 
 // scheduled run
 chrome.alarms.onAlarm.addListener((a) => {
-  if (a.name === "np-scan") triggerRun();
+  if (a.name === "np-scan") triggerRun("alarm");
 });
 
-async function triggerRun() {
+async function triggerRun(action = "runNow") {
   try {
-    const { count = 25 } = await chrome.storage.sync.get("count");
+    const { count = 25, interval = 15 } = await chrome.storage.sync.get(["count", "interval"]);
+
+    const body = {
+      emailsPerRun: count,
+      intervalMinutes: interval,
+      action,
+      triggeredAt: new Date().toISOString()
+    };
+
     const r = await fetch(RUN_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ emailsPerRun: count })
+      body: JSON.stringify(body)
     });
+
     console.log("[NP] POST", RUN_URL, "->", r.status, r.statusText);
     if (!r.ok) console.log("[NP] body:", await r.text());
   } catch (e) {
