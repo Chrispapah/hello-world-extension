@@ -1,9 +1,15 @@
 {
   "name": "NeuralPath Inbox Summaries",
+  "description": "Collects user settings and triggers server-side inbox summaries.",
   "version": "0.1.0",
   "manifest_version": 3,
+
   "action": { "default_popup": "popup.html" },
   "background": { "service_worker": "background.js" },
+
   "permissions": ["storage", "alarms"],
-  "host_permissions": ["https://api.neuralpath.io/*"]   // your backend or n8n webhook
+  "host_permissions": [
+    "https://api.neuralpath.io/*"
+    // add your staging host here if different
+  ]
 }
