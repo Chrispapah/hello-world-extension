@@ -25,4 +25,15 @@ $("save").onclick = async () => {
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(
+        body: JSON.stringify(payload),
+      }
+    );
+    console.log("onboard status:", r.status);
+  } catch (e) {
+    console.warn("onboard failed:", e);
+  }
+
+  window.close();
+};
+
+$("runNow").onclick = () => chrome.runtime.sendMessage({ type: "RUN_NOW" });
