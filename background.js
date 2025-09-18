@@ -1,4 +1,6 @@
-async function setAlarm(minutes){
+const RUN_URL = "https://cpapa.app.n8n.cloud/webhook/80ea3982-204e-4410-88f0-20947f55ae5e";
+
+async function setAlarm(minutes) {
   await chrome.alarms.clear("np-scan");
   if (minutes && minutes >= 5) {
     chrome.alarms.create("np-scan", { periodInMinutes: minutes });
@@ -26,18 +28,20 @@ chrome.alarms.onAlarm.addListener((alarm) => {
   if (alarm.name === "np-scan") triggerRun();
 });
 
-async function triggerRun(){
+async function triggerRun() {
   try {
     const { count = 25 } = await chrome.storage.sync.get("count");
-    await fetch("https://cpapa.app.n8n.cloud/webhook/80ea3982-204e-4410-88f0-20947f55ae5e
-", {
+
+    const r = await fetch(RUN_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      credentials: "include",
+      // remove credentials unless you specifically need cookies from your domain
       body: JSON.stringify({ emailsPerRun: count })
     });
+
+    console.log("[NP] POST", RUN_URL, "->", r.status, r.statusText);
+    if (!r.ok) console.log("[NP] body:", await r.text());
   } catch (e) {
-    // optional: chrome.notifications API to alert the user
     console.warn("Run trigger failed:", e);
   }
 }
