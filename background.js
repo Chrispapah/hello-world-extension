@@ -35,12 +35,14 @@ async function triggerRun() {
     const r = await fetch(RUN_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      // remove credentials unless you specifically need cookies from your domain
       body: JSON.stringify({ emailsPerRun: count })
     });
 
     console.log("[NP] POST", RUN_URL, "->", r.status, r.statusText);
-    if (!r.ok) console.log("[NP] body:", await r.text());
+    if (!r.ok) {
+      const body = await r.text();
+      console.log("[NP] response body:", body);
+    }
   } catch (e) {
     console.warn("Run trigger failed:", e);
   }
